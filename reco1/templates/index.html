@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="static/vendor/jquery.rating.pack.js"></script>
+    <script type="text/javascript" src="static/main.js"></script>
+    <link rel="stylesheet" href="static/main.css"/>
+    <link rel="stylesheet" href="static/vendor/jquery.rating.css"/>
+  </head>
+  <body>
+    <h1>User-based Recommendations Example</h1>
+    <ul id="source_list">
+      {% for item in items %}
+      <li>
+        <div class="source_entry">
+          <span class="item_label">{{ item.name }}</span>
+          <input name="{{ item.id }}_star" type="radio" class="stars first-star"></input>
+          <input name="{{ item.id }}_star" type="radio" class="stars"></input>
+          <input name="{{ item.id }}_star" type="radio" class="stars"></input>
+          <input name="{{ item.id }}_star" type="radio" class="stars"></input>
+          <input name="{{ item.id }}_star" type="radio" class="stars"></input>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <div id="recommendations_container">
+      <ul id="recommendations_list">
+      </ul>
+    </div>
+  </body>
+</html>

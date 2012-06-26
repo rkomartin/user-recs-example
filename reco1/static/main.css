@@ -1,0 +1,36 @@
+ul {
+    list-style: none;
+}
+
+.item_label {
+    margin-left: 20px;
+}
+
+.item_label {
+    font-family: Helvetica;
+}
+
+.source_entry {
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-family: Helvetica;
+}
+
+#recommendations_container {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    background-color: #eee;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.recommendation_label {
+    font-family: Helvetica;
+}
+
+.recommendation_entry {
+    margin-bottom: 10px;
+}
