@@ -5,30 +5,40 @@ from util import get_last_successful_analysis, get_baselines, mean, std
 
 
 MIN_RATINGS = 100
+TABLE_NAME = 'movielens'
+
+# load the item metadata from a static file; in a production system this
+# information would likely come from a database
 ITEMS = [it 
     for it in json.loads(open('static/movie_descriptions.json').read())
     if it['num_ratings'] > MIN_RATINGS]
 ITEMS.sort(key=lambda x: x['name'])
 ITEM_NAMES = dict([(m['id'], m['name']) for m in ITEMS])
-TABLE_NAME = 'movielens'
 
 # connect to the Veritable API and perform baseline predictions; this will
-# allow us to compute "lift" later
+# allow us to compute rating "lift" later
 api = veritable.connect()
 analysis = get_last_successful_analysis(api, TABLE_NAME)
 baselines = get_baselines(analysis, ITEMS)
 app = Flask(__name__)
 
 
-'''
-Decides whether an item should be considered for inclusion in the 
-recommendations
-'''
 def item_filter(per_item_preds, baseline_val):
-    per_item_mean = mean(per_item_preds)
-    per_item_std = std(per_item_preds)
-    lift = per_item_mean - baseline_val
-    return per_item_mean > 3. and per_item_std < .8 and lift > 0.
+    '''
+    Decides whether an item should be considered for inclusion in the 
+    recommendations. This version requires that three conditions be met:
+    
+    1. The item must have a reasonably high predicted rating (per_item_mean > 3.)
+    2. The predictions must indicate that the user will rate the item higher than
+       its baseline rating (lift > .2)
+    3. The predictions must not be too uncertain regarding the positive 
+       lift (conf > .75)
+    '''
+    N = len(per_item_preds)
+    mn = mean(per_item_preds)
+    conf = float(sum([1 for p in per_item_preds if p - baseline_val > 0.])) / N
+    lift = mn - baseline_val
+    return mn > 3. and lift > .2 and conf > .75
 
 
 def item_sorter(item):
@@ -40,8 +50,8 @@ def index():
     return render_template('index.html', items=ITEMS)
 
 
-@app.route('/predict', methods=['POST'])
-def predict():
+@app.route('/recommend', methods=['POST'])
+def recommend():
     # make predictions
     query = request.json
     preds = analysis.predict(query)
