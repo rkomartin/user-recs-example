@@ -1,5 +1,3 @@
-from math import sqrt
-
 def get_last_successful_analysis(api, table_name):
     # Get the most recent analysis for the table that ended successfully
     table = api.get_table(table_name)
@@ -29,9 +27,3 @@ def mean(x):
         return float('nan')
     else:
         return float(sum(x)) / len(x)
-
-def std(x):
-    N = len(x)
-    sumsq = sum([a * a for a in x])
-    mn = mean(x)
-    return sqrt(sumsq / N - mn * mn)
