@@ -6,7 +6,7 @@ See [this page](FIXME) on the [Veritable developer docs](https://dev.priorknowle
 
 # Installation
 
-    ::: term
+    :::term
     $ git clone https://github.com/priorknowledge/reco1_pkrd.git
     $ cd reco1_pkrd
     $ pip install -r requirements.txt .
