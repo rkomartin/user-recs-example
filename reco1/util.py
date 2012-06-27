@@ -1,3 +1,5 @@
+from math import sqrt
+
 def get_last_successful_analysis(api, table_name):
     # Get the most recent analysis for the table that ended successfully
     table = api.get_table(table_name)
@@ -11,14 +13,14 @@ def get_last_successful_analysis(api, table_name):
     return last_successful_analysis
 
 
-def get_baselines(analysis):
+def get_baselines(analysis, items):
     # Get baseline ratings for all of the movies
-    query = dict([(m['id'], None) for m in ITEMS])
-    preds = analysis.predict(query, count=40)
+    query = dict([(item['id'], None) for item in items])
+    preds = analysis.predict(query)
     baselines = {}
-    for m in query:
-        per_movie_preds = [int(p[m]) for p in preds.distribution]
-        baselines[m] = float(sum(per_movie_preds)) / len(per_movie_preds)
+    for it in query:
+        per_item_preds = [float(p[it]) for p in preds.distribution]
+        baselines[it] = mean(per_item_preds)
     return baselines
 
 
@@ -27,3 +29,9 @@ def mean(x):
         return float('nan')
     else:
         return float(sum(x)) / len(x)
+
+def std(x):
+    N = len(x)
+    sumsq = sum([a * a for a in x])
+    mn = mean(x)
+    return sqrt(sumsq / N - mn * mn)

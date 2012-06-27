@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request
 import json
 import veritable
-from util import get_last_successful_analysis, get_baselines, mean
+from util import get_last_successful_analysis, get_baselines, mean, std
 
 
 MIN_RATINGS = 100
 ITEMS = [it 
-    for it in json.loads(open('static/item_descriptions.json').read())
+    for it in json.loads(open('static/movie_descriptions.json').read())
     if it['num_ratings'] > MIN_RATINGS]
 ITEMS.sort(key=lambda x: x['name'])
 ITEM_NAMES = dict([(m['id'], m['name']) for m in ITEMS])
@@ -16,8 +16,23 @@ TABLE_NAME = 'movielens'
 # allow us to compute "lift" later
 api = veritable.connect()
 analysis = get_last_successful_analysis(api, TABLE_NAME)
-baselines = get_baselines(analysis)
+baselines = get_baselines(analysis, ITEMS)
 app = Flask(__name__)
+
+
+'''
+Decides whether an item should be considered for inclusion in the 
+recommendations
+'''
+def item_filter(per_item_preds, baseline_val):
+    per_item_mean = mean(per_item_preds)
+    per_item_std = std(per_item_preds)
+    lift = per_item_mean - baseline_val
+    return per_item_mean > 3. and per_item_std < .8 and lift > 0.
+
+
+def item_sorter(item):
+    return item[1]
 
 
 @app.route('/')
@@ -32,16 +47,19 @@ def predict():
     preds = analysis.predict(query)
 
     # compute the rating change from baseline for each item
-    rating_lifts = []
+    item_scores = []
     for m in query:
         if query[m] == None:
-            per_item_preds = [int(p[m]) for p in preds.distribution]
-            per_item_mean = float(sum(per_item_preds)) / len(per_item_preds)
-            rating_lifts.append((m, per_item_mean - baselines[m]))
+            per_item_preds = [float(p[m]) for p in preds.distribution]
+            if item_filter(per_item_preds, baselines[m]):
+                # print ITEM_NAMES[m], lift, per_item_mean, per_item_std
+                per_item_mean = mean(per_item_preds)
+                lift = per_item_mean - baselines[m]
+                item_scores.append((m, lift))
     
     # sort by rating change and return those items with an increase
-    rating_lifts.sort(key=lambda r: r[1], reverse=True)
-    result = [(ITEM_NAMES[r[0]], r[1]) for r in rating_lifts if r[1] > 0.]
+    item_scores.sort(key=item_sorter, reverse=True)
+    result = [(ITEM_NAMES[r[0]], r[1]) for r in item_scores]
     return json.dumps(result)
     
 
