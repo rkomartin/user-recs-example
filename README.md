@@ -31,7 +31,7 @@ Then point your browser at [http://localhost:5000](http://localhost:5000)
 
 - [`recs/app.py`](https://github.com/priorknowledge/user-recs-example/blob/master/recs/app.py) The Flask application that make ratings predictions and uses them to generate item recommendations.
 - [`recs/static/main.js`](https://github.com/priorknowledge/user-recs-example/blob/master/recs/static/main.js) The Javascript that collects the user ratings, asks the server for recommendations, and then populates the page with the results.
-- [`recs/templates/index.html'](https://github.com/priorknowledge/user-recs-example/blob/master/recs/templates/index.html) The jinja template for the app's only page.
+- [`recs/templates/index.html`](https://github.com/priorknowledge/user-recs-example/blob/master/recs/templates/index.html) The jinja template for the app's only page.
 - [`util/run_analysis.py`](https://github.com/priorknowledge/user-recs-example/blob/master/util/run_analysis.py) A command-line script that uploads rating data to Veritable and starts an analysis.
 
 # Support
