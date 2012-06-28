@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import json
 import veritable
-from util import get_last_successful_analysis, get_baselines, mean, std
+from util import get_last_successful_analysis, get_baselines, mean
 
 
 MIN_RATINGS = 100
@@ -10,7 +10,7 @@ TABLE_NAME = 'movielens'
 # load the item metadata from a static file; in a production system this
 # information would likely come from a database
 ITEMS = [it 
-    for it in json.loads(open('static/movie_descriptions.json').read())
+    for it in json.loads(open('recs/static/movie_descriptions.json').read())
     if it['num_ratings'] > MIN_RATINGS]
 ITEMS.sort(key=lambda x: x['name'])
 ITEM_NAMES = dict([(m['id'], m['name']) for m in ITEMS])
