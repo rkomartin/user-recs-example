@@ -16,13 +16,13 @@ To download and install:
 
 To upload data and start an analysis:
 
+    $ export VERITABLE_KEY=<your Veritable API key>
     $ python util/run_analysis.py data/movielens_data.json data/movielens_schema.json
 
 The app will not work until this analysis is complete, which you can check on the [Veritable dashboard](https://dev.priorknowledge.com/dashboard).
 
 Once the analysis is done, run the app:
 
-    $ export VERITABLE_KEY=<your Veritable API key>
     $ python recs/app.py
 
 Then point your browser at [http://localhost:5000](http://localhost:5000)
