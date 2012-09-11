@@ -2,7 +2,7 @@
 
 This reference design demonstrates how to use the [Veritable API](https://dev.priorknowledge.com) to generate recommendations based on the ratings that a user has given other items.
 
-See [this page](https://dev.priorknowledge.com/docs/examples/example_user_recs.html) on the [Veritable developer docs](https://dev.priorknowledge.com/docs) for a more complete introduction and discussion of recommendation systems, and the architecture and implementation of this example.
+See [this page](https://dev.priorknowledge.com/docs/examples/user_recs) on the [Veritable developer docs](https://dev.priorknowledge.com/docs) for a more complete introduction and discussion of recommendation systems, and the architecture and implementation of this example.
 
 # Installation
 
